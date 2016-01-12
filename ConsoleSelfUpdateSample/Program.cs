@@ -26,7 +26,7 @@ namespace ConsoleSelfUpdateSample
 		private static AppDomain current;
 
 		private const string FDllName = "MarshalByRefObjectClassSample.dll";
-		private static Type FType;
+		//private static Type FType;
 
 		static IMain GetComponent()
 		{
