@@ -20,32 +20,29 @@ using System.Reflection;
 using System.Xml.Serialization;
 using System.Diagnostics.CodeAnalysis;
 
-using InterfaceSample;
-
 namespace MarshalByRefObjectClassSample
 {
-	public class MarshalByRefObjectMain : MarshalByRefObject, IMain
+	/// <summary>
+	/// Window1.xaml の相互作用ロジック
+	/// </summary>
+	public partial class Window1 : Window
 	{
-		public string Message
+		public Window1()
 		{
-			get
+			InitializeComponent();
+
+			// タイマを作成
+			var tm = new DispatcherTimer();
+			tm.Interval = new TimeSpan(0, 0, 1);
+			tm.IsEnabled = true;
+			tm.Tick += (sender, e) =>
 			{
-				return "This is MarshalByRefObjectMain.";
-			}
+				this.listBox.Items.Insert(0, this.FMain.Message);
+			};
+			this.FTimer = tm;
 		}
 
-		public void Run()
-		{
-			// 既定の AppDomain で Window を作成しているため、こちらでは Window の作成は不可
-			//var dispatcher = Application.Current.Dispatcher;
-			//if (dispatcher.CheckAccess())
-			//{
-			//	new Window1().Show();
-			//}
-			//else
-			//{
-			//	dispatcher.Invoke(() => new Window1().Show());
-			//}
-		}
+		private DispatcherTimer FTimer;
+		private MarshalByRefObjectMain FMain = new MarshalByRefObjectMain();
 	}
 }

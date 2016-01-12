@@ -8,6 +8,8 @@ namespace InterfaceSample
 {
 	public interface IMain
 	{
+		void Run();
+
 		string Message { get; }
 	}
 }

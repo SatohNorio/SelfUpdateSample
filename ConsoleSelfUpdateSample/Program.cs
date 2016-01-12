@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Reflection;
 
 using InterfaceSample;
 
@@ -24,13 +25,26 @@ namespace ConsoleSelfUpdateSample
 		private static readonly List<AppDomain> old = new List<AppDomain>();
 		private static AppDomain current;
 
+		private const string FDllName = "MarshalByRefObjectClassSample.dll";
+		private static Type FType;
+
 		static IMain GetComponent()
 		{
 			lock (syncObj)
 			{
 				if (current == null)
 					return null;
-				return current.CreateInstanceAndUnwrap(asm, cls) as IMain;
+
+				//var t = Program.FType;
+				//if (t != null)
+				//{
+				//	return current.CreateInstanceAndUnwrap(t.Assembly.FullName, t.FullName) as IMain;
+				//}
+				//else
+				//{
+				//	return null;
+				//}
+				return current.CreateInstanceAndUnwrap(asm2, cls2) as IMain;
 			}
 		}
 
@@ -38,7 +52,7 @@ namespace ConsoleSelfUpdateSample
 		{
 			lock (syncObj)
 			{
-				if (File.Exists(dll)||File.Exists(dll2))
+				if (File.Exists(dll2))
 				{
 					AppDomainSetup setup = new AppDomainSetup();
 					setup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
@@ -54,6 +68,17 @@ namespace ConsoleSelfUpdateSample
 
 		static void Main(string[] args)
 		{
+			// アセンブリを掴んでしまい、更新できなくなるので使用できない。
+			//var asm = Assembly.LoadFrom(Program.FDllName);
+			//foreach (var t in asm.GetExportedTypes())
+			//{
+			//	if (typeof(IMain).IsAssignableFrom(t) && t.IsClass)
+			//	{
+			//		Program.FType = t;
+			//		break;
+			//	}
+			//}
+
 			var bQuit = false;
 			var task = Task.Factory.StartNew(() =>
 			{
@@ -73,7 +98,7 @@ namespace ConsoleSelfUpdateSample
 					if (greeting != null)
 						Console.WriteLine(greeting.Message);
 					else
-						Console.WriteLine("need " + dll + ".");
+						Console.WriteLine("need " + dll2 + ".");
 					Thread.Sleep(1000);
 				}
 				foreach (var domain in old)

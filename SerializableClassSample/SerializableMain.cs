@@ -18,5 +18,9 @@ namespace SerializableClassSample
 				return "SerializableMain";
 			}
 		}
+
+		public void Run()
+		{
+		}
 	}
 }
